@@ -28,6 +28,7 @@ ADD_PIRANHA_TESTCASE(exceptions)
 ADD_PIRANHA_TESTCASE(hash_set)
 ADD_PIRANHA_TESTCASE(kronecker_array)
 ADD_PIRANHA_TESTCASE(kronecker_monomial)
+ADD_PIRANHA_TESTCASE(k_monomial)
 # The Intel compiler bombs out on some tests. Need to investigate more.
 # NOTE: some of these seem to involve the decltype() stuff in power_series.
 # Maybe changing the style of those will fix it.

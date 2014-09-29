@@ -45,6 +45,7 @@ SET(HEADERS_LIST
 	thread_pool.hpp
 	tuning.hpp
 	convert_to.hpp
+	k_monomial.hpp
 )
 
 SET(DETAIL_HEADERS_LIST
