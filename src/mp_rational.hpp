@@ -921,6 +921,16 @@ class mp_rational
 		{
 			return m_den;
 		}
+		/// Get const reference to the numerator.
+		int_type &num()
+		{
+			return m_num;
+		}
+		/// Get const reference to the denominator.
+		int_type &den()
+		{
+			return m_den;
+		}
 		/// Get an \p mpq view of \p this.
 		/**
 		 * This method will return an object of an unspecified type \p mpq_view which is implicitly convertible
