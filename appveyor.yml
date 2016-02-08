@@ -10,6 +10,9 @@ environment:
     - BUILD_TYPE: "Debug"
       SPLIT_TEST_NUM: "2"
 
+cache:
+- C:\boost -> appveyor.yml
+
 install:
 
 # Rename sh.exe as sh.exe in PATH interferes with MinGW
@@ -26,19 +29,21 @@ install:
 - call tools\appveyor-download.cmd "https://raw.githubusercontent.com/isuruf/symengine-dependencies/557083e291fb5d4e8f6df2d920d6adb98ccd0748/mpfr-3.1.3-x86_64-w64-mingw32.7z" -FileName mpfr.7z
 - 7z x -aoa -oC:\mingw64 mpfr.7z > NUL
 # Download patched libpythonXX.a
-- call tools\appveyor-download.cmd "https://raw.githubusercontent.com/symengine/dependencies/5cff7d1736877336cf9fb58267111beea4fa152f/python-x86_64-w64-mingw32.7z" -FileName pyx64.7z
-- 7z x -aoa -oC:\ pyx64.7z > NUL
+#- call tools\appveyor-download.cmd "https://raw.githubusercontent.com/symengine/dependencies/5cff7d1736877336cf9fb58267111beea4fa152f/python-x86_64-w64-mingw32.7z" -FileName pyx64.7z
+#- 7z x -aoa -oC:\ pyx64.7z > NUL
 # Download Bzip2 binary
 - call tools\appveyor-download.cmd "https://raw.githubusercontent.com/isuruf/symengine-dependencies/ee82c8ec4421e3762b974363bb44adac3e4e1f08/bzip2-dev-1.0.6-win-x64.7z" -FileName bzip2.7z
 - 7z x -aoa -oC:\bzip2\ bzip2.7z > NUL
 - set PATH=C:\bzip2\bin;%PATH%
+# Check if boost cache is there
+- if not exist C:\boost set IS_CACHED="IS_CACHED"
 # Download Boost source
-- call tools\appveyor-download.cmd "http://downloads.sourceforge.net/project/boost/boost/1.60.0/boost_1_60_0.7z?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fboost%2Ffiles%2Fboost%2F1.60.0%2F&ts=1454729351&use_mirror=ncu" -FileName boost.7z
-- 7z x -aoa -oC:\projects\ boost.7z > NUL
+- if [%IS_CACHED%]==[IS_CACHED] call tools\appveyor-download.cmd "http://downloads.sourceforge.net/project/boost/boost/1.60.0/boost_1_60_0.7z?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fboost%2Ffiles%2Fboost%2F1.60.0%2F&ts=1454729351&use_mirror=ncu" -FileName boost.7z
+- if [%IS_CACHED%]==[IS_CACHED] 7z x -aoa -oC:\projects\ boost.7z > NUL
 # Build boost
-- cd C:\projects\boost_1_60_0
-- .\bootstrap > NUL
-- .\b2 install --toolset=gcc --runtime-link=static --with-iostreams --with-serialization --with-filesystem --with-system --with-timer --with-chrono --with-test --prefix=C:\mingw64 -sNO_BZIP2=0 -sBZIP2_BINARY=libbz2 -sBZIP2_INCLUDE=C:\bzip2\include -sBZIP2_LIBPATH=C:\bzip2\lib > NUL
+- if [%IS_CACHED%]==[IS_CACHED] cd C:\projects\boost_1_60_0
+- if [%IS_CACHED%]==[IS_CACHED] .\bootstrap > NUL
+- if [%IS_CACHED%]==[IS_CACHED] .\b2 install --toolset=gcc --runtime-link=static --with-iostreams --with-serialization --with-filesystem --with-system --with-timer --with-chrono --with-test --prefix=C:\boost -sNO_BZIP2=0 -sBZIP2_BINARY=libbz2 -sBZIP2_INCLUDE=C:\bzip2\include -sBZIP2_LIBPATH=C:\bzip2\lib > NUL
 
 
 build_script:
@@ -46,7 +51,7 @@ build_script:
 - mkdir build
 - cd build
 
-- cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DPIRANHA_TEST_SPLIT=yes -DPIRANHA_TEST_SPLIT_NUM=%SPLIT_TEST_NUM% -DBoost_ADDITIONAL_VERSIONS=1.60.0;1.60 -DBoost_USE_MULTITHREADED=yes -DBoost_USE_STATIC_LIBS=yes -DCMAKE_PREFIX_PATH=C:\bzip2 ..
+- cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DPIRANHA_TEST_SPLIT=yes -DPIRANHA_TEST_SPLIT_NUM=%SPLIT_TEST_NUM% -DBoost_ADDITIONAL_VERSIONS=1.60.0;1.60 -DBoost_USE_MULTITHREADED=yes -DBoost_USE_STATIC_LIBS=yes -DCMAKE_PREFIX_PATH=C:\bzip2;C:\boost ..
 #- cmake --build . --target install
 - mingw32-make -j2 install
 
