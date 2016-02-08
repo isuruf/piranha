@@ -36,14 +36,14 @@ install:
 - 7z x -aoa -oC:\bzip2\ bzip2.7z > NUL
 - set PATH=C:\bzip2\bin;%PATH%
 # Check if boost cache is there
-- if not exist C:\boost set IS_CACHED="IS_CACHED"
+- if not exist C:\boost set IS_CACHED="FALSE"
 # Download Boost source
-- if [%IS_CACHED%]==[IS_CACHED] call tools\appveyor-download.cmd "http://downloads.sourceforge.net/project/boost/boost/1.60.0/boost_1_60_0.7z?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fboost%2Ffiles%2Fboost%2F1.60.0%2F&ts=1454729351&use_mirror=ncu" -FileName boost.7z
-- if [%IS_CACHED%]==[IS_CACHED] 7z x -aoa -oC:\projects\ boost.7z > NUL
+- if [%IS_CACHED%]==[FALSE] call tools\appveyor-download.cmd "http://downloads.sourceforge.net/project/boost/boost/1.60.0/boost_1_60_0.7z?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fboost%2Ffiles%2Fboost%2F1.60.0%2F&ts=1454729351&use_mirror=ncu" -FileName boost.7z
+- if [%IS_CACHED%]==[FALSE] 7z x -aoa -oC:\projects\ boost.7z > NUL
 # Build boost
-- if [%IS_CACHED%]==[IS_CACHED] cd C:\projects\boost_1_60_0
-- if [%IS_CACHED%]==[IS_CACHED] .\bootstrap > NUL
-- if [%IS_CACHED%]==[IS_CACHED] .\b2 install --toolset=gcc --runtime-link=static --with-iostreams --with-serialization --with-filesystem --with-system --with-timer --with-chrono --with-test --prefix=C:\boost -sNO_BZIP2=0 -sBZIP2_BINARY=libbz2 -sBZIP2_INCLUDE=C:\bzip2\include -sBZIP2_LIBPATH=C:\bzip2\lib > NUL
+- if [%IS_CACHED%]==[FALSE] cd C:\projects\boost_1_60_0
+- if [%IS_CACHED%]==[FALSE] .\bootstrap > NUL
+- if [%IS_CACHED%]==[FALSE] .\b2 install --toolset=gcc --runtime-link=static --with-iostreams --with-serialization --with-filesystem --with-system --with-timer --with-chrono --with-test --prefix=C:\boost -sNO_BZIP2=0 -sBZIP2_BINARY=libbz2 -sBZIP2_INCLUDE=C:\bzip2\include -sBZIP2_LIBPATH=C:\bzip2\lib > NUL
 
 
 build_script:
