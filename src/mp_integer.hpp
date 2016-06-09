@@ -431,6 +431,20 @@ struct static_integer
 	}
 	bool consistency_checks() const
 	{
+        std::cout 
+            << (_mp_alloc == 0) << " "
+            << (_mp_size <= 2) << " "
+            << (!(static_cast<dlimb_t>(m_limbs[0u]) >> limb_bits)) << " "
+            << (!(static_cast<dlimb_t>(m_limbs[1u]) >> limb_bits)) << " " << std:: endl;
+
+        std::cout
+            << (calculate_n_limbs()) << " "
+            << (_mp_size) << " "
+            << (_mp_alloc) << " "
+            << (_mp_size) << " "
+            << (m_limbs[0u]) << " "
+            << (m_limbs[1u]) << " ";
+
 		return _mp_alloc == 0 && _mp_size <= 2 && _mp_size >= -2 &&
 			// Excess bits must be zero for consistency.
 			!(static_cast<dlimb_t>(m_limbs[0u]) >> limb_bits) &&
