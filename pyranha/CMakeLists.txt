@@ -18,7 +18,7 @@ set(PYRANHA_TUTORIAL_FILES
 	tutorial/rational.py
 )
 
-add_library(_core MODULE
+add_library(_core SHARED
 	# General.
 	core.cpp
 	type_system.cpp
