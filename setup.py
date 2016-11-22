@@ -57,5 +57,6 @@ setup(name=NAME,
     platforms=PLATFORMS,
     install_requires=INSTALL_REQUIRES,
     package_data=PACKAGE_DATA,
+    packages=['pyranha'],
     cmake_args=['-DBUILD_PYRANHA=yes']
 )
