@@ -70,13 +70,6 @@ endif()
 message(STATUS "Current CXX flags: ${CMAKE_CXX_FLAGS}")
 message(STATUS "Current CXX debug flags: ${CMAKE_CXX_FLAGS_DEBUG}")
 
-# NOTE: ideally we would want this inside the pyranha CMakeLists.txt, however
-# it seems like there's a strange interaction between the code for finding Boost.Python
-# and the CMake FindPythonLibs macro, and it does not work that way.
-if(BUILD_PYRANHA)
-	include(YACMAPythonSetup)
-endif()
-
 # Boost libraries setup.
 # NOTE: apparently, according to the FindBoost.cmake of cmake 3.5, iostreams
 # depends on regex.

@@ -1,6 +1,6 @@
-# NOTE: this is already included from above, but keep it here
-# in case one day we decide to split off Pyranha.
-include(YACMAPythonSetup)
+find_package(PythonInterp REQUIRED)
+find_package(PythonLibs REQUIRED)
+find_package(PythonExtensions REQUIRED)
 
 # Python version check.
 if(${PYTHON_VERSION_MAJOR} LESS 2 OR (${PYTHON_VERSION_MAJOR} EQUAL 2 AND ${PYTHON_VERSION_MINOR} LESS 6))
@@ -18,7 +18,7 @@ set(PYRANHA_TUTORIAL_FILES
 	tutorial/rational.py
 )
 
-YACMA_PYTHON_MODULE(_core SHARED
+add_library(_core MODULE
 	# General.
 	core.cpp
 	type_system.cpp
@@ -79,19 +79,23 @@ YACMA_PYTHON_MODULE(_core SHARED
 	__init__.py _common.py celmec.py math.py test.py types.py "${CMAKE_CURRENT_BINARY_DIR}/_version.py"
 	${PYRANHA_TUTORIAL_FILES}
 )
+# Any "lib" prefix normally added by CMake must be removed.
+set_target_properties(_core PROPERTIES PREFIX "")
 
- # Setup the installation path.
-set(PYRANHA_INSTALL_PATH "${YACMA_PYTHON_MODULES_INSTALL_PATH}/pyranha")
+# The module needs Boost.Python, plus the mandatory libraries.
+target_link_libraries(_core ${MANDATORY_LIBRARIES} ${Boost_PYTHON_LIBRARY})
 
-# The module needs Boost.Python and the Python libs, plus the mandatory libraries.
-target_link_libraries(_core ${MANDATORY_LIBRARIES} ${Boost_PYTHON_LIBRARY} ${PYTHON_LIBRARIES})
+# Python library is linked and soabi added.
+python_extension_module(_core)
+
 install(TARGETS _core
-	RUNTIME DESTINATION ${PYRANHA_INSTALL_PATH}
-	LIBRARY DESTINATION ${PYRANHA_INSTALL_PATH}
+	RUNTIME DESTINATION pyranha
+	LIBRARY DESTINATION pyranha
 )
 
 # Add the global init file and the additional submodules.
-install(FILES __init__.py _common.py celmec.py math.py test.py types.py "${CMAKE_CURRENT_BINARY_DIR}/_version.py" DESTINATION ${PYRANHA_INSTALL_PATH})
+install(FILES __init__.py _common.py celmec.py math.py test.py types.py "${CMAKE_CURRENT_BINARY_DIR}/_version.py" DESTINATION pyranha)
 
 # Install the tutorial files.
-install(FILES ${PYRANHA_TUTORIAL_FILES} DESTINATION "${PYRANHA_INSTALL_PATH}/_tutorial")
+install(FILES ${PYRANHA_TUTORIAL_FILES} DESTINATION "pyranha/_tutorial")
+
